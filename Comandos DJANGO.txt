@@ -1,0 +1,97 @@
+Comandos DJANGO
+
+- Instalar el paquete.
+
+pipenv o pip install django
+
+- Crear un Proyecto
+
+django-admin startproject nombre_del_proyecto .
+
+- Inicializar un proyecto
+
+python manage.py runserver
+
+- Crear un aplicacion dentro del proyecto
+
+python manage.py startapp nombre_de_la_aplicacion
+
+1. Instalar Aplicacion:
+
+//Aplicacion -> Archivo apps.py: Copiar el nombre de la clase 
+//Proyecto -> Archivo settings.py: En INSTALLED_APPS escribimos 'carpeta_de_la_aplicacion.apps.nombre_de_la_clase'
+
+2. URL'S
+
+//Proyecto -> Archivo urls.py: 
+Agregamos include a la importacion de django.urls,
+En urlpatterns, agregamos la url de nuestra aplicacion, debe quedar de la siguiente forma:
+
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('nombre_de_la_aplicacion/', include('nombre_de_la_aplicacion.urls')),
+]
+
+//Aplicacion: 
+Crear archivo urls.py
+En dicho archivo crear el siguiente esquema:
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index')
+]
+
+3. Views
+
+//Aplicacion -> Archivo views.py:
+Crear el siguiente esquema:
+
+from django.http import HttpResponse
+from django.shortcuts import render
+
+# Create your views here.
+def index(request):
+    return HttpResponse('Hola Mundo!')
+
+- Models
+
+//Esquema de models:
+
+from django.db import models
+from django.utils import timezone
+
+# Create your models here.
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=255)
+
+class Producto(models.Model):
+    nombre = models.CharField(max_length=255)
+    stock = models.IntegerField()
+    puntaje = models.FloatField()
+    #CASCADE: eliminar el producto, si se elimina la categoria
+    #PROTECT: lanza un error 
+    #RESTRICT: solo elimina si no existen productos
+    #SER_NULL: actualiza a valor nulo
+    #SET_DEFAULT: asigna valor por defecto
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    creado_en = models.DateTimeField(default=timezone.now)
+
+- Migration
+
+python manage.py makemigrations
+python manage.py migrate
+
+- Admin 
+
+python manage.py createsuperuser 
+
+Usuario: admin
+Password: ChainsawAdmin13
+
+- pylintrc
+
+  
